@@ -1,75 +1,126 @@
 import streamlit as st
 
-# Title of the app
-st.title("Candidate Selection Tool")
+# Dummy credentials with names and companies for demonstration purposes
+users = {
+    "hr1@gmail.com": {
+        "password": "password123",
+        "name": "Rohan Singh",
+        "company": "TechSolutions Inc."
+    },
+    "hr2@gmail.com": {
+        "password": "passwordabc",
+        "name": "Mandeep Kaur",
+        "company": "Creative Solutions Ltd."
+    },
+}
 
-# Section 1: Candidate Screening and Ranking
-st.header("Candidate Screening and Ranking")
-st.write("""
-    Our tool addresses these challenges by using advanced skill set matching and filtering 
-    to improve candidate selection. It streamlines the candidate screening and ranking 
-    process to save valuable time and resources.
-""")
+# Function to authenticate users
+def authenticate(username, password):
+    user = users.get(username)
+    if user and user["password"] == password:
+        return user  # Return user details if authentication is successful
+    return None  # Return None if authentication fails
 
-# Input for candidate resumes (upload resumes)
-uploaded_files = st.file_uploader("Upload Candidate Resumes", type=["pdf", "docx"], accept_multiple_files=True)
+# Initialize session state variables
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "Login"
+if 'current_user' not in st.session_state:
+    st.session_state.current_user = None  # Variable to store the logged-in user details
 
-if uploaded_files:
-    for uploaded_file in uploaded_files:
-        st.write(f"Uploaded: {uploaded_file.name}")
+# Login page
+if not st.session_state.logged_in:
+    st.title("Login")
+    username = st.text_input("Email")
+    password = st.text_input("Password", type='password')
+    
+    if st.button("Login"):
+        user = authenticate(username, password)
+        if user:
+            st.session_state.logged_in = True
+            st.session_state.current_user = user  # Store the logged-in user details
+            st.success("Logged in successfully!")
+            st.session_state.current_page = "Home"  # Redirect to Home
+        else:
+            st.error("Invalid username or password.")
+else:
+    # Header
+    st.title("HireHive")
 
-# Section 2: Matching and Ranking Candidates
-st.header("Match and Rank Candidates")
-st.write("""
-    Implement algorithms to match and rank candidates based on keywords and semantic analysis, 
-    ensuring the best fit for job descriptions.
-""")
+    # Navigation
+    st.sidebar.subheader(f"Welcome, {st.session_state.current_user['name']}!")
+    page = st.sidebar.radio("Navigation", ("Home", "Jobs", "Team Building"))
 
-# Input for job description
-job_description = st.text_area("Enter Job Description")
+    # Update current page based on sidebar selection
+    if page != st.session_state.current_page:
+        st.session_state.current_page = page
 
-# Button for matching candidates
-if st.button("Match Candidates"):
-    st.write("Matching candidates... (Logic to be implemented)")
+    # Home Page
+    if st.session_state.current_page == "Home":
+        st.write("""
+            HireHive is a candidate selection tool designed to streamline the recruitment process 
+            by leveraging advanced skill set matching and automated social profile verification.
+        """)
+        st.header("Your Hiring Statistics")
+        st.write("""
+            Data analysis and visualization to gain a deeper understanding
+        """)
 
-# Section 3: Team Building
-st.header("Build Balanced Teams")
-st.write("""
-    Strategically select candidates from the resume pool to build balanced teams from scratch 
-    by aligning complementary skills.
-""")
+        # Button for analysis
+        if st.button("Analyze Data"):
+            st.write("Analyzing data... (Logic to be implemented)")
 
-# Input for team size
-team_size = st.number_input("Select Team Size", min_value=1, max_value=10, value=1)
+    # Add new job Page
+    elif st.session_state.current_page == "Jobs":
+        st.header("Add New Job Opening")
+        with st.form(key='job_form'):
+            job_title = st.text_input("Job Title")
+            job_description = st.text_area("Job Description")
+            job_location = st.selectbox("Location", ["Noida", "Bangalore", "Hyderabad"])
+            job_type = st.selectbox("Job Type", ["Full-Time", "Internship", "Contract"])
+            job_salary = st.number_input("Salary (per year)", min_value=0, step=100000)
+            
+            # Submit button
+            submit_button = st.form_submit_button(label='Add Job Opening')
 
-# Button for team selection
-if st.button("Select Team"):
-    st.write("Selecting team... (Logic to be implemented)")
+            if submit_button:
+                # Here you can add code to store the job opening in a database or other storage
+                st.success(f"Job '{job_title}' has been added successfully!")
+                st.write("### Job Details:")
+                st.write(f"**Title:** {job_title}")
+                st.write(f"**Description:** {job_description}")
+                st.write(f"**Location:** {job_location}")
+                st.write(f"**Type:** {job_type}")
+                st.write(f"**Salary:** ${job_salary:,}")
 
-# Section 4: Social Coding Score
-st.header("Social Coding Score")
-st.write("""
-    Create a social coding score by web scraping candidates’ profiles from platforms like GitHub, 
-    LeetCode, and Codeforces to assess their skills more practically.
-""")
+        st.header("All Active Jobs")
+        # API call to get all active jobs
 
-# Input for candidate profiles
-candidate_profiles = st.text_area("Enter Candidate Profile URLs (comma-separated)")
+    # Team Building Page
+    elif st.session_state.current_page == "Team Building":
+        st.header("Build Balanced Teams")
+        st.write("""
+            Strategically select candidates from the resume pool to build balanced teams from scratch 
+            by aligning complementary skills.
+        """)
 
-# Button for scoring
-if st.button("Calculate Social Scores"):
-    st.write("Calculating social scores... (Logic to be implemented)")
+        # Form to gather product or use case requirements
+        with st.form("requirement_form"):
+            st.subheader("Project Requirements")
+            team_size = st.number_input("Select Team Size", min_value=1, max_value=10, value=1)
+            project_name = st.text_input("Project Name")
+            skills_required = st.text_input("Required Skills (comma-separated)")
+            use_case_description = st.text_area("Use Case Description")
 
-# Section 5: Recruitment Data Analysis
-st.header("Recruitment Data Analysis")
-st.write("""
-    Provide recruitment data analysis and visualization tools to gain a deeper understanding of 
-    the candidate's profile.
-""")
+            # Submit button for the form
+            submitted = st.form_submit_button("Submit Requirements")
 
-# Button for analysis
-if st.button("Analyze Data"):
-    st.write("Analyzing recruitment data... (Logic to be implemented)")
+        if submitted:
+            st.write("Requirements submitted successfully!")
+            st.write(f"**Project Name:** {project_name}")
+            st.write(f"**Required Skills:** {skills_required.split(',')}")
+            st.write(f"**Use Case Description:** {use_case_description}")
 
-# Footer
-st.write("© 2024 Candidate Selection Tool")
+            # Placeholder for team selection logic
+            st.write("Searching for balanced teams... (Logic to be implemented)")
