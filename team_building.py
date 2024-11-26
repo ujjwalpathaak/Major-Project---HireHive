@@ -1,12 +1,12 @@
 import random
-from itertools import permutations
+from itertools import permutations, combinations
 
 # Sample candidates with skills and soft skills
 candidates = [
     {
         "id": 1,
         "name": "Rohan Singh",
-        "skills": ["Python", "JavaScript", "SQL", "React.js"],
+        "skills": ["Python", "JavaScript", "SQL", "React.js", "Angular"],
         "soft_skills": ["Communication", "Teamwork", "Problem-solving"]
     },
     {
@@ -18,7 +18,7 @@ candidates = [
     {
         "id": 3,
         "name": "Vikram Patel",
-        "skills": ["Agile", "Product Management", "Stakeholder Management", "Scrum"],
+        "skills": ["Agile", "Angular", "Product Management", "Stakeholder Management", "Scrum"],
         "soft_skills": ["Leadership", "Conflict Resolution", "Decision Making"]
     },
     {
@@ -42,7 +42,7 @@ candidates = [
     {
         "id": 7,
         "name": "Rajesh Gupta",
-        "skills": ["AWS", "Docker", "Kubernetes", "Linux"],
+        "skills": ["AWS", "Docker", "Node.js", "Kubernetes", "Linux"],
         "soft_skills": ["Time Management", "Collaboration", "Proactiveness"]
     },
     {
@@ -54,7 +54,7 @@ candidates = [
     {
         "id": 9,
         "name": "Nikhil Rao",
-        "skills": ["Java", "Spring Boot", "Hibernate", "MySQL"],
+        "skills": ["Java", "Spring Boot", "Hibernate", "MySQL", "Angular"],
         "soft_skills": ["Teamwork", "Critical Thinking", "Leadership"]
     },
     {
@@ -66,7 +66,7 @@ candidates = [
     {
         "id": 11,
         "name": "Abhay Singh",
-        "skills": ["PHP", "Laravel", "MySQL", "REST APIs"],
+        "skills": ["PHP", "Laravel", "Node.js", "MySQL", "REST APIs"],
         "soft_skills": ["Problem-solving", "Adaptability", "Time Management"]
     },
     {
@@ -84,7 +84,7 @@ candidates = [
     {
         "id": 14,
         "name": "Ishita Sen",
-        "skills": ["React.js", "TypeScript", "Redux", "GraphQL"],
+        "skills": ["React.js", "TypeScript", "Redux", "GraphQL", "UX Design"],
         "soft_skills": ["Creativity", "Collaboration", "Problem-solving"]
     },
     {
@@ -96,7 +96,7 @@ candidates = [
     {
         "id": 16,
         "name": "Swati Mehta",
-        "skills": ["Data Visualization", "Power BI", "Tableau", "Excel"],
+        "skills": ["Data Visualization", "Power BI", "Tableau", "Excel", "Angular"],
         "soft_skills": ["Analytical Thinking", "Attention to Detail", "Problem-solving"]
     },
     {
@@ -114,36 +114,44 @@ candidates = [
     {
         "id": 19,
         "name": "Harshit Aggarwal",
-        "skills": ["Big Data", "Hadoop", "Spark", "NoSQL"],
+        "skills": ["Big Data", "Hadoop", "Spark", "NoSQL", "UX Design"],
         "soft_skills": ["Analytical Thinking", "Time Management", "Proactiveness"]
     },
     {
         "id": 20,
         "name": "Ritika Sharma",
-        "skills": ["IoT", "Embedded Systems", "C", "Arduino"],
+        "skills": ["IoT", "Embedded Systems", "C", "Arduino", "Node.js"],
         "soft_skills": ["Attention to Detail", "Focus", "Critical Thinking"]
     }
 ]
 
 
-# Function to calculate the complementarity score between two candidates
-def calculate_complementarity(cand1, cand2):
-    # Technical skill complementarity
-    common_tech_skills = len(set(cand1['skills']).intersection(cand2['skills']))
-    
-    # Soft skill complementarity
-    complementary_soft_skills = len(set(cand1['soft_skills']).symmetric_difference(set(cand2['soft_skills'])))
-    
-    # Debugging output
-    print(f"Comparing {cand1['name']} and {cand2['name']} -> Common Tech Skills: {common_tech_skills}, Complementary Soft Skills: {complementary_soft_skills}")
-    
-    # Return the total complementarity score (consider both skills equally)
-    return common_tech_skills + complementary_soft_skills
+def some_complementarity_function(c1, c2):
+    # Ensure skills are sets for the intersection operation
+    skills_c1 = set(c1['skills'])  # Convert to set if it's a list
+    skills_c2 = set(c2['skills'])  # Convert to set if it's a list
 
-# Function to filter candidates based on required skills
+    common_skills = len(skills_c1.intersection(skills_c2))
+    total_skills = len(skills_c1.union(skills_c2))
+
+    # Complementarity score: higher the common skills, higher the complementarity
+    score = common_skills / total_skills  # You can adjust this logic as needed
+    return score
+
+def calculate_complementarity(c1, c2, c3):
+    # Calculate complementarity scores for pairs
+    score_1_2 = some_complementarity_function(c1, c2)
+    score_1_3 = some_complementarity_function(c1, c3)
+    score_2_3 = some_complementarity_function(c2, c3)
+
+    # Combine the scores (average in this case)
+    total_score = (score_1_2 + score_1_3 + score_2_3) / 3
+    return total_score
+
+# Function to filter candidates based on required skills (at least one skill should match)
 def filter_candidates(candidates, required_skills):
-    filtered = [cand for cand in candidates if all(skill in cand['skills'] for skill in required_skills)]
-    print(f"Filtered Candidates (required skills: {required_skills}): {[cand['name'] for cand in filtered]}")
+    filtered = [cand for cand in candidates if any(skill in cand['skills'] for skill in required_skills)]
+    # print(f"Filtered Candidates (at least one required skill): {[cand['name'] for cand in filtered]}")
     return filtered
 
 # Function to generate teams based on filtered candidates
@@ -158,63 +166,78 @@ def generate_teams(candidates, team_size, num_teams, required_skills):
     if len(filtered_candidates) < team_size * num_teams:
         raise ValueError("Not enough candidates to form the required number of teams.")
     
-    # Step 2: Generate all possible candidate pairs
-    candidate_pairs = []
-    for c1, c2 in permutations(filtered_candidates, 2):
-        score = calculate_complementarity(c1, c2)
-        candidate_pairs.append((c1, c2, score))
+    # Step 2: Generate all possible candidate triplets
+    candidate_triplets = []
+    for c1, c2, c3 in combinations(filtered_candidates, 3):
+        score = calculate_complementarity(c1, c2, c3)  # Now correctly passes 3 candidates
+        candidate_triplets.append((c1, c2, c3, score))
     
-    print(f"Total Candidate Pairs Generated: {len(candidate_pairs)}")
+    print(f"Total Candidate Pairs Generated: {len(candidate_triplets)}")
     
     # Step 3: Sort pairs by complementarity score
-    candidate_pairs.sort(key=lambda x: x[2], reverse=True)
+    candidate_triplets.sort(key=lambda x: x[3], reverse=True)
     
     # Debugging output
-    print(f"Top 5 Candidate Pairs (by score):")
-    for pair in candidate_pairs[:5]:
-        print(f"Pair: {pair[0]['name']} - {pair[1]['name']}, Score: {pair[2]}")
+    print(f"Top 5 Candidate Teams (by score):")
+    for pair in candidate_triplets[:5]:
+        print(f"Team: {pair[0]['name']} - {pair[1]['name']} - {pair[2]['name']}, Score: {pair[3]}")
     
-    # Step 4: Form teams by choosing pairs with high complementarity scores
-    teams = []
-    remaining_candidates = set(filtered_candidates)  # Track remaining candidates
-    used_candidates = set()  # Track already assigned candidates
+    return candidate_triplets[:5]
     
-    while len(teams) < num_teams:
-        team = []
-        while len(team) < team_size and remaining_candidates:
-            best_pair = None
-            for c1, c2, score in candidate_pairs:
-                if c1 in remaining_candidates and c2 in remaining_candidates:
-                    if c1 not in used_candidates and c2 not in used_candidates:
-                        team.append(c1)
-                        team.append(c2)
-                        used_candidates.add(c1)
-                        used_candidates.add(c2)
-                        remaining_candidates.remove(c1)
-                        remaining_candidates.remove(c2)
-                        best_pair = (c1, c2)
-                        break
-            if not best_pair:  # In case no valid pair is found
-                break
-        if len(team) == team_size:
-            teams.append(team)
+    # # Step 4: Form teams by choosing candidates whose combined skills cover all required skills
+    # teams = []
+    # remaining_candidates = list(filtered_candidates)
+    # used_candidates = set()  # Track already assigned candidates
     
-    return teams
+    # while len(teams) < num_teams:
+    #     team = []
+    #     team_skills = set()
+        
+    #     while len(team) < team_size and remaining_candidates:
+    #         best_pair = None
+    #         for c1, c2, score in candidate_triplets:
+    #             if c1 in remaining_candidates and c2 in remaining_candidates:
+    #                 if c1 not in used_candidates and c2 not in used_candidates:
+    #                     team.append(c1)
+    #                     team.append(c2)
+    #                     team_skills.update(c1['skills'])
+    #                     team_skills.update(c2['skills'])
+    #                     used_candidates.add(c1)
+    #                     used_candidates.add(c2)
+    #                     remaining_candidates.remove(c1)
+    #                     remaining_candidates.remove(c2)
+    #                     best_pair = (c1, c2)
+    #                     break
+    #         if not best_pair:  # In case no valid pair is found
+    #             break
+        
+    #     # Check if the team covers all required skills
+    #     if team_skills.issuperset(required_skills) and len(team) == team_size:
+    #         teams.append(team)
+    #     else:
+    #         # If not all required skills are covered, continue the loop
+    #         for member in team:
+    #             used_candidates.remove(member)
+    #             remaining_candidates.add(member)
+    #         team.clear()
 
-# Example usage
+    # return teams
+
+
 team_size = 3  # Size of each team
 num_teams = 1  # Number of teams to form
 project_name = "E-commerce App Development"
-required_skills = ["Angular", "Node.js", "UX Design"]  # Adjusted to match available skills
+required_skills = ['Angular', "Node.js", "UX Design"]  # Adjusted to match available skills
 use_case_description = "Building an e-commerce platform with a user-friendly interface and robust back-end."
 
 try:
+    print( type(required_skills))
     teams = generate_teams(candidates, team_size, num_teams, required_skills)
-
-    # Output the teams formed
-    print(f"Project: {project_name}")
-    print(f"Use Case: {use_case_description}")
-    for i, team in enumerate(teams):
-        print(f"Team {i+1}: {[member['name'] for member in team]}")
+    print(teams)
+    # print(f"\nGenerated Teams for Project: {project_name} ({use_case_description})")
+    # for idx, team in enumerate(teams, 1):
+    #     print(f"\nTeam {idx}:")
+    #     for member in team:
+    #         print(f"- {member['name']} (Skills: {', '.join(member['skills'])})")
 except ValueError as e:
     print(e)
