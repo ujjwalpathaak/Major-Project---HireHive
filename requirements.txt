@@ -1,1 +1,17 @@
 streamlit
+python-docx
+pdfplumber
+cosine-similarity
+pyresparser
+nltk
+fuzzywuzzy
+tfidf
+requests
+spacy==3.7.2
+nltk
+pdfminer.six
+tensorflow
+transformers==4.30.0
+sentence_transformers
+huggingface-hub==0.23.2
+# !python -m spacy download en_core_web_md
