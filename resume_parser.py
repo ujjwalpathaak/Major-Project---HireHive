@@ -12,7 +12,6 @@ def open_pdf_file(uploaded_file):
     converter = TextConverter(manager, output, laparams=LAParams())
     interpreter = PDFPageInterpreter(manager, converter)
 
-    # Use BytesIO to read the uploaded file
     infile = BytesIO(uploaded_file.read())
     for page in PDFPage.get_pages(infile, set()):
         interpreter.process_page(page)
@@ -21,7 +20,6 @@ def open_pdf_file(uploaded_file):
     text = output.getvalue()
     output.close()
 
-    # Process the extracted text into lines
     result = []
     for line in text.split('\n'):
         line2 = line.strip()
@@ -56,8 +54,7 @@ def get_email(document):
         for mat in matches:
             if len(mat) > 0:
                 emails.append(mat)
-    
-    # Return "Unknown" if no emails were found
+
     if not emails:
         return "Unknown"
     

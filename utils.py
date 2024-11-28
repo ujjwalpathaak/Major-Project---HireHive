@@ -41,6 +41,15 @@ def parse_pdf(file_path):
         text = preprocess_text(text)
     return text
 
+def normalize_terms(input_terms):
+    # Create a reverse lookup dictionary for synonyms to their normalized form
+    reverse_lookup = {synonym: key for key, synonyms in synonym_lookup.items() for synonym in synonyms}
+    
+    # Normalize each term in the input list if a synonym is found
+    normalized_terms = [reverse_lookup.get(term.lower(), term) for term in input_terms]
+    
+    return normalized_terms
+
 def extract_skills(document):
     skills = []
 

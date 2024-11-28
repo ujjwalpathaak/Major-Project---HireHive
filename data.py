@@ -20,7 +20,6 @@ synonym_lookup = {
     "assembly": {"asm", "assembly language", "assembly"},
     "bash": {"bash scripting", "shell scripts", "bash"},
     "powershell": {"powershell scripting", "powershell scripts", "powershell"},
-
     "react": {"react.js", "reactjs", "react library", "react"},
     "angular": {"angular framework", "angular.js", "angularjs", "angular"},
     "vue": {"vue.js", "vuejs", "vue"},
@@ -35,7 +34,6 @@ synonym_lookup = {
     "spring": {"spring framework", "spring boot", "spring mvc", "spring"},
     "asp.net": {"asp.net framework", "asp.net", "dotnet framework"},
     "ruby on rails": {"rails", "ror", "ruby on rails"},
-
     "html": {"html5", "markup language", "html"},
     "css": {"css3", "cascading style sheets", "css"},
     "sass": {"scss", "css preprocessor", "sass"},
@@ -43,16 +41,14 @@ synonym_lookup = {
     "bootstrap": {"bootstrap framework", "css framework", "bootstrap"},
     "material-ui": {"mui", "material design", "material-ui"},
     "foundation": {"foundation css framework", "foundation"},
-    
     "node.js": {"node", "nodejs", "server-side javascript", "node.js"},
     "graphql": {"graph query language", "graphql api", "graphql"},
     "rest api": {"restful services", "rest architecture", "rest api"},
     "elasticsearch": {"elastic stack", "search engine", "elasticsearch"},
     "redis": {"in-memory database", "key-value store", "redis"},
     "rabbitmq": {"message broker", "rabbit message queue", "rabbitmq"},
-    "apache kafka": {"kafka", "event streaming", "apache kafka"},
+    "blockchain": {"solidity", "blockchain", "ethereum", "smart contracts", "web3.js"},
     "nginx": {"nginx server", "web server", "nginx"},
-    
     "aws": {"amazon web services", "cloud computing", "aws cloud", "aws"},
     "azure": {"microsoft azure", "cloud platform", "azure cloud", "azure"},
     "gcp": {"google cloud platform", "google cloud", "gcp"},
@@ -62,7 +58,6 @@ synonym_lookup = {
     "ansible": {"ansible automation", "ansible playbooks", "ansible"},
     "jenkins": {"jenkins ci", "continuous integration", "jenkins"},
     "github actions": {"ci/cd pipelines", "github workflows", "github actions"},
-
     "mysql": {"sql", "mysql database", "mysql"},
     "postgresql": {"postgres", "postgresql database", "postgresql"},
     "sqlite": {"sqlite3", "lightweight database", "sqlite"},
@@ -71,8 +66,6 @@ synonym_lookup = {
     "couchdb": {"apache couchdb", "nosql database", "couchdb"},
     "oracle": {"oracle database", "relational database", "oracle"},
     "mariadb": {"mariadb database", "mysql fork", "mariadb"},
-
-    
     "machine learning": {"ml", "ai", "artificial intelligence", "machine learning"},
     "deep learning": {"neural networks", "dl", "tensorflow", "pytorch", "keras", "deep learning"},
     "tensorflow": {"tensorflow library", "machine learning framework", "tensorflow"},
@@ -83,8 +76,6 @@ synonym_lookup = {
     "huggingface": {"transformers", "nlp library", "huggingface"},
     "opencv": {"computer vision library", "opencv"},
     "nlp": {"natural language processing", "text mining", "nlp"},
-
- 
     "git": {"version control", "git commands", "github", "gitlab", "git"},
     "ci/cd": {"continuous integration and deployment", "jenkins", "travis ci", "github actions", "ci/cd"},
     "cybersecurity": {"network security", "ethical hacking", "penetration testing", "cybersecurity"},
@@ -93,7 +84,6 @@ synonym_lookup = {
     "data visualization": {"tableau", "power bi", "data dashboards", "data visualization"},
     "robotics": {"robotics engineering", "automation", "robot programming", "robotics"},
     "game development": {"unity", "unreal engine", "game engines", "game development"},
-
     "ui design": {"user interface design", "ui design", "interface design"},
     "ux design": {"user experience design", "ux design", "experience design"},
     "wireframing": {"wireframe creation", "low-fidelity design", "wireframing"},
@@ -108,7 +98,6 @@ synonym_lookup = {
     "user research": {"ux research", "user feedback", "user research"},
     "persona development": {"user personas", "audience profiles", "persona development"},
     "journey mapping": {"user journey maps", "experience mapping", "journey mapping"},
-
     "figma": {"design collaboration", "ui tool", "figma"},
     "adobe xd": {"xd", "adobe design", "adobe xd"},
     "sketch": {"sketch app", "sketch design", "sketch"},
@@ -120,16 +109,13 @@ synonym_lookup = {
     "adobe photoshop": {"ps", "image editing", "adobe photoshop"},
     "adobe illustrator": {"ai", "vector design", "adobe illustrator"},
     "marvel": {"marvel app", "design prototyping", "marvel"},
-
     "html/css": {"markup and styling", "frontend basics", "html/css"},
     "javascript for ui": {"ui scripting", "interactive design", "javascript"},
     "sass/less": {"css preprocessor", "advanced css", "sass/less"},
-
     "a/b testing": {"split testing", "experiment design", "a/b testing"},
     "heatmaps": {"user behavior analysis", "website heatmaps", "heatmaps"},
     "analytics tools": {"google analytics", "user behavior tools", "analytics tools"},
     "heuristic evaluation": {"ux evaluation", "interface assessment", "heuristic evaluation"},
-
     "data analysis": {"data analytics", "data analyst", "data analysis"},
     "data wrangling": {"data cleaning", "data preprocessing", "data wrangling"},
     "excel": {"microsoft excel", "excel spreadsheet", "excel formulas"},

@@ -82,9 +82,9 @@ else:
             
 
             if submit_button:
-                file_content = uploaded_jd_file.read()  # Read the content once
-                file1 = io.BytesIO(file_content)  # First file object for open_pdf_file
-                file2 = io.BytesIO(file_content)  # Second file object for parse_pdf
+                file_content = uploaded_jd_file.read()
+                file1 = io.BytesIO(file_content)
+                file2 = io.BytesIO(file_content)
                 job_description = parse_pdf(file1)
                 parsed_text = open_pdf_file(file2)
                 document = preprocess_document(parsed_text)
@@ -130,20 +130,17 @@ else:
             st.write(f"**Required Skills:** {skills_required.split(',')}")
 
             st.write("Searching for balanced teams...")
-            print(candidates_list)
-            print(parse_skills(skills_required))
             teams = generate_teams(candidates_list, 3, 1, parse_skills(skills_required))
+            print(teams)
 
             index = 1
             for team1, team2, team3, score in teams:
                 st.write("---")
-                st.subheader(f"Team {index} - {score * 100:.2f}%")
+                st.subheader(f"Team {index}")
 
                 st.write(f"**Candidates:** {team1['name']} - {team2['name']} - {team3['name']}")
                 st.write(f"**Combined Skills:** {', '.join(team1['skills'] + team2['skills'] + team3['skills'])}")
-                st.write(f"**Combined Soft Skills:** {', '.join(team1['soft_skills'] + team2['soft_skills'] + team3['soft_skills'])}")
-
-                st.write(f"**Score:** {score:.2f}")
+                # st.write(f"**Combined Soft Skills:** {', '.join(team1['soft_skills'] + team2['soft_skills'] + team3['soft_skills'])}")
                 index = index + 1
 
     elif st.session_state.current_page == "Candidates":
@@ -163,9 +160,9 @@ else:
             if uploaded_files:
                 st.write(f"Uploaded {len(uploaded_files)} resume(s) for {job['job_title']}:")
                 for file in uploaded_files:
-                    file_content = file.read()  # Read the content once
-                    file1 = io.BytesIO(file_content)  # First file object for open_pdf_file
-                    file2 = io.BytesIO(file_content)  # Second file object for parse_pdf
+                    file_content = file.read()
+                    file1 = io.BytesIO(file_content)
+                    file2 = io.BytesIO(file_content)
                     st.write(f"- {file.name}")
                     parsed_text = open_pdf_file(file1)
                     resume_text = parse_pdf(file2)
@@ -176,8 +173,8 @@ else:
                     experience = get_experience(document)
                     skills = extract_skills(document)
                     score = get_score(skills, resume_text, job['job_description'], job['job_skills'])
-                    candidates_id = add_new_candidate(email, phone_no, skills, score, job["job_title"])
-                    update_job_with_ranking(candidates_id, score, job["job_title"])
+                    candidates_id = add_new_candidate(file.name, email, phone_no, skills, score, job["job_title"])
+                    update_job_with_ranking(file.name, candidates_id, score, job["job_title"])
 
                 st.success(f"Resumes uploaded and processed successfully for {job['job_title']}!")
                 st.session_state['uploaded_files'] = None
@@ -185,12 +182,11 @@ else:
             data = get_job_rankings(job['job_title'])
             st.subheader('Candidate Rankings')
             for ranking in data['rankings']:
-                st.write(f"**Score**: {ranking['score']}")
-                st.write(f"**Email**: {', '.join(ranking['candidate_info']['email'])}")
+                st.write(f"**Resume**: {ranking['name']}")
                 
                 with st.expander("Candidate Information"):
-                    st.write(f"**Phone Number**: {', '.join(ranking['candidate_info']['phone_no'])}")
-                    st.write(f"**Skills**: {', '.join(ranking['candidate_info']['skills'])}")
+                    st.write(f"**Phone Number**: {ranking['candidate_info']['phone_no']}")
+                    st.write(f"**Skills**: {ranking['candidate_info']['skills']}")
                 
                 st.write("---")
                 
