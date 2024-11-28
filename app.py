@@ -1,4 +1,5 @@
 import nltk
+import io
 import streamlit as st
 
 nltk.download('punkt_tab')
@@ -78,10 +79,16 @@ else:
             job_salary = st.number_input("Salary (per year)", min_value=0, step=100000)
 
             submit_button = st.form_submit_button(label='Add Job Opening')
+            
 
             if submit_button:
-                job_description = parse_pdf(uploaded_jd_file)
-                job_skills = list(extract_skills(job_description))
+                file_content = uploaded_jd_file.read()  # Read the content once
+                file1 = io.BytesIO(file_content)  # First file object for open_pdf_file
+                file2 = io.BytesIO(file_content)  # Second file object for parse_pdf
+                job_description = parse_pdf(file1)
+                parsed_text = open_pdf_file(file2)
+                document = preprocess_document(parsed_text)
+                job_skills = list(extract_skills(document))
                 print("result", job_skills)
                 add_new_job(job_title, job_description, job_location, job_type, job_salary, job_skills)
                 st.success(f"Job '{job_title}' has been added successfully!")
@@ -101,6 +108,7 @@ else:
             st.write(f"**Location:** {job['location']}")
             st.write(f"**Job Type:** {job['job_type']}")
             st.write(f"**Salary:** {job['salary']}")
+            st.write(f"**Required Skills:** {list(job['job_skills'])}")
 
             st.write("---")
 
@@ -122,7 +130,8 @@ else:
             st.write(f"**Required Skills:** {skills_required.split(',')}")
 
             st.write("Searching for balanced teams...")
-            print(skills_required.split(','))
+            print(candidates_list)
+            print(parse_skills(skills_required))
             teams = generate_teams(candidates_list, 3, 1, parse_skills(skills_required))
 
             index = 1
@@ -149,26 +158,29 @@ else:
 
             st.write(f"### Upload Resumes for {job['job_title']}")
 
-            uploaded_files = st.file_uploader(f"Choose resumes for {job['job_title']}", type=["pdf"], accept_multiple_files=True, key=f"resume_uploader_{job['job_title']}")
+            uploaded_files = st.file_uploader(f"Choose resumes for {job['job_title']}", type=["pdf"], accept_multiple_files=True)
 
             if uploaded_files:
                 st.write(f"Uploaded {len(uploaded_files)} resume(s) for {job['job_title']}:")
                 for file in uploaded_files:
+                    file_content = file.read()  # Read the content once
+                    file1 = io.BytesIO(file_content)  # First file object for open_pdf_file
+                    file2 = io.BytesIO(file_content)  # Second file object for parse_pdf
                     st.write(f"- {file.name}")
-                    resume_text = parse_pdf(file)
-                    print("resume_text", resume_text)
-                    email = get_email(resume_text)
-                    print("email", email)
-                    phone_no = get_phone_no(resume_text)
-                    print("phone_no", phone_no)
-                    skills = extract_skills(resume_text)
-                    print("skills", skills)
+                    parsed_text = open_pdf_file(file1)
+                    resume_text = parse_pdf(file2)
+                    email = get_email(parsed_text)
+                    phone_no = get_phone_no(parsed_text)
+                    document = preprocess_document(parsed_text)
+                    education = get_education(document)
+                    experience = get_experience(document)
+                    skills = extract_skills(document)
                     score = get_score(skills, resume_text, job['job_description'], job['job_skills'])
-                    print("score", score)
                     candidates_id = add_new_candidate(email, phone_no, skills, score, job["job_title"])
                     update_job_with_ranking(candidates_id, score, job["job_title"])
 
                 st.success(f"Resumes uploaded and processed successfully for {job['job_title']}!")
+                st.session_state['uploaded_files'] = None
 
             data = get_job_rankings(job['job_title'])
             st.subheader('Candidate Rankings')
@@ -181,3 +193,5 @@ else:
                     st.write(f"**Skills**: {', '.join(ranking['candidate_info']['skills'])}")
                 
                 st.write("---")
+                
+            st.write("---")

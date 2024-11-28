@@ -1,12 +1,10 @@
 import regex as re
-from io import StringIO
+import pdfminer
+from io import StringIO, BytesIO
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
-
-# -------- UTILS --------
-from utils import extract_skills
 
 def open_pdf_file(uploaded_file):
     output = StringIO()
@@ -14,18 +12,20 @@ def open_pdf_file(uploaded_file):
     converter = TextConverter(manager, output, laparams=LAParams())
     interpreter = PDFPageInterpreter(manager, converter)
 
-    # Use the uploaded_file directly as it is already file-like
-    infile = uploaded_file
-    for page in PDFPage.get_pages(infile):
+    # Use BytesIO to read the uploaded file
+    infile = BytesIO(uploaded_file.read())
+    for page in PDFPage.get_pages(infile, set()):
         interpreter.process_page(page)
+    infile.close()
     converter.close()
     text = output.getvalue()
     output.close()
 
+    # Process the extracted text into lines
     result = []
     for line in text.split('\n'):
         line2 = line.strip()
-        if line2 != '':
+        if line2:
             result.append(line2)
     return result
 
@@ -49,37 +49,32 @@ def preprocess_document(document):
     return (document)
 
 def get_email(document):
-    """
-    Extract the first email address from a given text document.
-    """
-    pattern = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
-
-    if isinstance(document, str):
-        document = document.splitlines()
-
+    emails = []
+    pattern = re.compile(r'\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}')
     for line in document:
-        match = pattern.search(line)
-        if match:
-            return match.group()
+        matches = pattern.findall(line)
+        for mat in matches:
+            if len(mat) > 0:
+                emails.append(mat)
     
-    return None
+    # Return "Unknown" if no emails were found
+    if not emails:
+        return "Unknown"
+    
+    return emails
 
 def get_phone_no(document):
-    """
-    Extract the first phone number from a given text document.
-    """
-    # Updated regex to match different phone formats
-    mob_num_regex = r'(\+91[-.\s]??\d{10}|\d{10}|\(\d{3}\)[-.\s]??\d{3}[-.\s]??\d{4}|\d{3}[-.\s]??\d{3}[-.\s]??\d{4})'
+    mob_num_regex = r'''(\d{3}[-\.\s]??\d{3}[-\.\s]??\d{4}|\(\d{3}\)
+                        [-\.\s]*\d{3}[-\.\s]??\d{4}|\d{5}[-\.\s]??\d{4})'''
     pattern = re.compile(mob_num_regex)
+    matches = []
+    for line in document:
+        match = pattern.findall(line)
+        for mat in match:
+            if len(mat) > 9:
+                matches.append(mat)
 
-    # Split the document into lines
-    lines = document.split('\n')
-    for line in lines:
-        match = pattern.search(line)  # Find the first match in the line
-        if match:
-            return match.group()  # Return the first matched phone number
-
-    return None  # Return None if no phone number is found
+    return (matches)
 
 def get_education(document):
     education_terms = [

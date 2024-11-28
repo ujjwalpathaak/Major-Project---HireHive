@@ -19,12 +19,10 @@ db = client.HireHive
 
 jobs = db.jobs.find()
 candidates = db.candidates.find()
-skills_dict = db.skills_dict.find()
 users = db.users.find()
 
 jobs_list = list(jobs)
 candidates_list = list(candidates)
-skills_dict_list = list(skills_dict)
 users_list = list(users)
 
 
