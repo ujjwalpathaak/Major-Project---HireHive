@@ -91,7 +91,6 @@ def add_new_job(job_title, job_description, job_location, job_type, job_salary, 
     st.session_state.jobs_list.append(job_data)
 
 def add_new_candidate(name, email, phone_no, skills, score, job):
-    print(name)
     candidate_data = {
         "job": job,
         "score": score

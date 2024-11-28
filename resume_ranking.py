@@ -34,7 +34,6 @@ def get_score(resume_skills, resume_text, jd_text, jd_skills):
     vectors = vectorizer.toarray()
     job_vector, resume_vector = vectors[0], vectors[1]
     tfidf_similarity = cosine_similarity([job_vector], [resume_vector])[0][0]
-    print(f"TF-IDF Similarity between JD and Resume: {round(tfidf_similarity, 2)}")
 
     resume_embeddings_st = get_sentence_transformer_embeddings(resume_skills)
     jd_embeddings_st = get_sentence_transformer_embeddings(jd_skills)
@@ -56,8 +55,6 @@ def get_score(resume_skills, resume_text, jd_text, jd_skills):
 
             if st_similarity >= st_similarity_threshold or bert_similarity >= bert_similarity_threshold:
                 matched_skills.append((resume_skill, jd_skill, st_similarity, bert_similarity))
-
-    print("Matched Skills based on Sentence Transformers and BERT:", matched_skills)
 
     filtered_st_similarities = [sim[2] for sim in matched_skills if sim[2] >= st_similarity_threshold]
     filtered_bert_similarities = [sim[3] for sim in matched_skills if sim[3] >= bert_similarity_threshold]

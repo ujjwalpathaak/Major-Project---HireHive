@@ -89,7 +89,6 @@ else:
                 parsed_text = open_pdf_file(file2)
                 document = preprocess_document(parsed_text)
                 job_skills = list(extract_skills(document))
-                print("result", job_skills)
                 add_new_job(job_title, job_description, job_location, job_type, job_salary, job_skills)
                 st.success(f"Job '{job_title}' has been added successfully!")
                 st.write("### Job Details:")
@@ -131,7 +130,6 @@ else:
 
             st.write("Searching for balanced teams...")
             teams = generate_teams(candidates_list, 3, 1, parse_skills(skills_required))
-            print(teams)
 
             index = 1
             for team1, team2, team3, score in teams:

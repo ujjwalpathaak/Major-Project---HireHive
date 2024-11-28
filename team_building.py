@@ -63,8 +63,6 @@ def filter_candidates(candidates, required_skills):
 def generate_teams(candidates, team_size, num_teams, required_skills):
     filtered_candidates = filter_candidates(candidates, normalize_terms(required_skills))
     
-    print(f"Number of Filtered Candidates: {len(filtered_candidates)}")
-    
     if len(filtered_candidates) < team_size * num_teams:
         raise ValueError("Not enough candidates to form the required number of teams.")
     
