@@ -151,3 +151,30 @@ synonym_lookup = {
     "databases": {"relational databases", "sql databases", "database management"},
     "excel pivot tables": {"pivot tables", "excel analysis", "excel pivot"}
 }
+education_terms = [
+    "bachelor", "b.sc", "ba", "b.a", "bachelors", "bachelor's",
+    "master", "m.sc", "m.a", "m.tech", "m.eng", "masters", "master's",
+    "phd", "doctorate", "doctoral", "ph.d", "d.phil",
+    "associate", "associate's", "as", "a.s",
+    "postgraduate", "pg", "post-graduation",
+    "undergraduate", "ug", "under-graduation",
+    "diploma", "certification", "certificate", "degree",
+    "minor", "major", "specialization", "honours", "honors",
+    "engineering", "science", "technology", "arts", "commerce",
+    "humanities", "mathematics", "math", "physics", "chemistry",
+    "biology", "computer science", "cs", "information technology", "it",
+    "data science", "ai", "artificial intelligence", "machine learning",
+    "statistics", "business", "management", "mba", "law", "llb", "ll.m",
+    "medicine", "mbbs", "nursing", "pharmacy", "economics", "finance",
+    "marketing", "psychology", "sociology", "education", "teaching",
+    "college", "university", "academy", "institute", "school",
+    "polytechnic", "community college", "ivy league",
+    "technical institute", "trade school",
+    "mooc", "online course", "bootcamp", "coursera", "udemy",
+    "edx", "skillshare", "linkedin learning", "nanodegree",
+    "google certification", "aws certification", "microsoft certification",
+    "grad school", "high school", "secondary school",
+    "primary school", "higher education", "continuing education",
+    "research", "scholarship", "fellowship", "internship",
+    "thesis", "dissertation"
+]

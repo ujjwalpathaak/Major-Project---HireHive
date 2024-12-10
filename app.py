@@ -138,7 +138,6 @@ else:
 
                 st.write(f"**Candidates:** {team1['name']} - {team2['name']} - {team3['name']}")
                 st.write(f"**Combined Skills:** {', '.join(team1['skills'] + team2['skills'] + team3['skills'])}")
-                # st.write(f"**Combined Soft Skills:** {', '.join(team1['soft_skills'] + team2['soft_skills'] + team3['soft_skills'])}")
                 index = index + 1
 
     elif st.session_state.current_page == "Candidates":
